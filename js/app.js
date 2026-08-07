@@ -51,6 +51,34 @@ function addDays(str, n) {
   return toStr(d);
 }
 
+/* 计算宝宝月龄（基于 BABY.birth） */
+function getAgeInfo() {
+  var today = new Date();
+  var b = parseDate(BABY.birth);
+  var ty = today.getFullYear(), tm = today.getMonth(), td = today.getDate();
+  var by = b.getFullYear(), bm = b.getMonth(), bd = b.getDate();
+  var totalMonths = (ty - by) * 12 + (tm - bm);
+  var days = td - bd;
+  if (days < 0) {
+    totalMonths = totalMonths - 1;
+    var prevMonthDays = new Date(ty, tm, 0).getDate();
+    days = days + prevMonthDays;
+  }
+  return { years: Math.floor(totalMonths / 12), months: totalMonths % 12, days: days, totalMonths: totalMonths };
+}
+
+/* 月龄的中文描述 */
+function formatAge() {
+  var a = getAgeInfo();
+  if (a.years >= 1) {
+    var p = a.years + " 岁";
+    if (a.months > 0) p += " " + a.months + " 个月";
+    if (a.days > 0) p += " " + a.days + " 天";
+    return BABY.name + " " + p;
+  }
+  return BABY.name + " " + a.totalMonths + " 个月" + (a.days > 0 ? " " + a.days + " 天" : "");
+}
+
 /* ---------------- 内容查找 ---------------- */
 
 function findIn(cat, title) {
@@ -181,6 +209,7 @@ function renderToday() {
   $("today-week").textContent = isTomorrow ? "明日预览" : "第 " + plan.week + " 周";
   $("today-date").textContent = fmtDate(parseDate(dateStr)) + (plan.future ? "（周计划起点在未来）" : "");
   $("hello-sub").textContent = "每天 20:00 · 3–5 分钟 · 1 诗 + 1 歌，重在每天在场";
+  $("hello-age").textContent = "🎂 " + formatAge();
 
   $("poem-title").textContent = "《" + plan.poem.title + "》";
   $("poem-author").textContent = plan.poem.author || "";
