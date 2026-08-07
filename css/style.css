@@ -531,8 +531,8 @@ html[data-theme="dark"] .badge.star { background: #8a6a12; color: #f5d98c; }
 
 .focus-text {
   font-family: var(--kaiti);
-  font-size: clamp(1.6rem, 6.5vw, 3rem);
-  line-height: 1.7;
+  font-size: clamp(1.5rem, 5.8vw, 2.6rem);
+  line-height: 1.6;
   letter-spacing: 0.05em;
   color: var(--fg);
   user-select: none;
