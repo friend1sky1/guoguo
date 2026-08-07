@@ -690,3 +690,4 @@ html[data-theme="dark"] .badge.star { background: #8a6a12; color: #f5d98c; }
   .piece-text { font-size: clamp(2rem, 5.5vw, 3rem); }
   main { padding-top: 20px; }
 }
+
