@@ -161,6 +161,18 @@ function swapToday(dateStr) {
 
 var preview = null; /* null | 'tomorrow' */
 
+/* 把诗/谣文本按句读标点拆成一行一句，用 <br> 连接（不改原内容，仅显示排版） */
+function formatLines(text) {
+  if (!text) return "";
+  var lines = text.replace(/([，。！？；、])/g, "$1\n").split("\n");
+  var out = [];
+  for (var i = 0; i < lines.length; i++) {
+    var s = lines[i].trim();
+    if (s) out.push(s);
+  }
+  return out.join("<br>");
+}
+
 function renderToday() {
   var dateStr = preview === "tomorrow" ? addDays(todayStr(), 1) : todayStr();
   var plan = getPlan(dateStr);
@@ -172,15 +184,15 @@ function renderToday() {
 
   $("poem-title").textContent = "《" + plan.poem.title + "》";
   $("poem-author").textContent = plan.poem.author || "";
-  $("poem-text").textContent = plan.poem.text;
+  $("poem-text").innerHTML = formatLines(plan.poem.text);
   $("poem-tips").textContent = plan.poem.tips;
 
   $("song-title").textContent = "《" + plan.song.title + "》";
-  $("song-text").textContent = plan.song.text;
+  $("song-text").innerHTML = formatLines(plan.song.text);
   $("song-tips").textContent = plan.song.tips;
 
   $("lul-title").textContent = "《" + plan.lullaby.title + "》";
-  $("lul-text").textContent = plan.lullaby.text;
+  $("lul-text").innerHTML = formatLines(plan.lullaby.text);
   $("lul-tips").textContent = plan.lullaby.tips;
 
   var stepsHtml = "";
@@ -232,7 +244,7 @@ function openModal(item, kindLabel) {
   $("m-kind").textContent = kindLabel;
   $("m-title").textContent = "《" + item.title + "》";
   $("m-author").textContent = item.author || "";
-  $("m-text").textContent = item.text;
+  $("m-text").innerHTML = formatLines(item.text);
   $("m-tips").textContent = "怎么读：" + item.tips;
   $("modal-mask").hidden = false;
   document.body.style.overflow = "hidden";
@@ -251,7 +263,7 @@ function openFocus(kind, title, author, text) {
   $("focus-kind").textContent = kind;
   $("focus-title").textContent = title;
   $("focus-author").textContent = author || "";
-  $("focus-text").textContent = text;
+  $("focus-text").innerHTML = formatLines(text);
   $("focus-mask").hidden = false;
   document.body.style.overflow = "hidden";
   /* 尽力尝试真全屏（不支持时遮罩本身就是全屏） */
