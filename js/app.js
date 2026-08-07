@@ -168,6 +168,7 @@ function renderToday() {
 
   $("today-week").textContent = isTomorrow ? "明日预览" : "第 " + plan.week + " 周";
   $("today-date").textContent = fmtDate(parseDate(dateStr)) + (plan.future ? "（周计划起点在未来）" : "");
+  $("hello-sub").textContent = "每天 20:00 · 3–5 分钟 · 1 诗 + 1 歌，重在每天在场";
 
   $("poem-title").textContent = "《" + plan.poem.title + "》";
   $("poem-author").textContent = plan.poem.author || "";

@@ -36,18 +36,22 @@
 
     <!-- ======== 视图一：今日 ======== -->
     <section id="view-today" class="view active">
-      <div class="today-head">
-        <span id="today-week" class="week-badge"></span>
-        <span id="today-date" class="today-date"></span>
-      </div>
 
-      <div class="concept">
-        <b>今晚：</b>3–5 分钟，1 诗 + 1 歌。慢点念、拖长韵、看 ta 的眼睛——重在每天在场，不在时长。
+      <!-- 温馨首屏卡 -->
+      <div class="hello-card">
+        <div class="hello-emoji">🌙✨</div>
+        <div class="hello-title">今晚，给果果念点什么？</div>
+        <div class="hello-sub" id="hello-sub"></div>
+        <div class="today-head">
+          <span id="today-week" class="week-badge"></span>
+          <span id="today-date" class="today-date"></span>
+        </div>
       </div>
 
       <!-- 诗 -->
       <article class="piece poem-piece" id="piece-poem">
-        <div class="piece-kind">诗 · 先读 2 遍 <span class="hint">慢 · 拖韵 · 看眼睛</span></div>
+        <div class="piece-kind-tag">📖 小诗 · 先读 2 遍</div>
+        <div class="piece-kind"><span class="hint">慢 · 拖韵 · 看眼睛</span></div>
         <h2 class="piece-title" id="poem-title"></h2>
         <div class="piece-author" id="poem-author"></div>
         <div class="piece-text" id="poem-text"></div>
@@ -59,7 +63,8 @@
 
       <!-- 歌/谣 -->
       <article class="piece song-piece" id="piece-song">
-        <div class="piece-kind">儿歌/童谣 · 再哼 1–2 遍 <span class="hint">配轻拍或动作</span></div>
+        <div class="piece-kind-tag">🎵 儿歌童谣 · 再哼 1–2 遍</div>
+        <div class="piece-kind"><span class="hint">配轻拍或动作</span></div>
         <h2 class="piece-title" id="song-title"></h2>
         <div class="piece-text" id="song-text"></div>
         <details class="piece-tips" open>
@@ -78,15 +83,15 @@
         </div>
       </details>
 
-      <!-- 今晚 5 步 -->
+      <!-- 今晚 5 步（收进折叠） -->
       <details class="steps-box" open>
         <summary>📋 今晚固定 5 步（约 3–5 分钟）</summary>
         <ol id="night-steps"></ol>
       </details>
 
       <div class="today-actions">
-        <button type="button" id="btn-swap" class="btn">换一组（今晚用）</button>
-        <button type="button" id="btn-tomorrow" class="btn ghost">看看明天</button>
+        <button type="button" id="btn-swap" class="btn">换一组 🔄</button>
+        <button type="button" id="btn-tomorrow" class="btn ghost">看看明天 →</button>
       </div>
     </section>
 
