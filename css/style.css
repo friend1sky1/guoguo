@@ -510,6 +510,11 @@ html[data-theme="dark"] .badge.star { background: #8a6a12; color: #f5d98c; }
   -webkit-overflow-scrolling: touch;
 }
 
+/* 全屏时的背后层默认是黑色 → 改为奶油色，消除进入/退出全屏瞬间的黑闪 */
+.focus-mask::backdrop {
+  background: var(--bg);
+}
+
 .focus-mask[hidden] { display: none; }
 
 .focus-kind {
