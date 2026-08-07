@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#1f2933">
+  <title>果果的早教小站</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ======== 顶栏 ======== -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <h1>果果的早教小站</h1>
+        <p class="tagline">每天 20:00 · 3–5 分钟 · 重在在场，不在时长</p>
+      </div>
+      <div class="topbar-actions">
+        <button type="button" id="btn-font-minus" class="icon-btn" title="字号变小" aria-label="字号变小">A−</button>
+        <button type="button" id="btn-font-plus"  class="icon-btn" title="字号变大" aria-label="字号变大">A+</button>
+        <button type="button" id="btn-theme"      class="icon-btn" title="切换深色/浅色" aria-label="切换主题">🌙</button>
+      </div>
+    </div>
+    <nav class="tabs" id="tabs">
+      <button type="button" class="tab active" data-view="today">今日</button>
+      <button type="button" class="tab" data-view="library">内容库</button>
+      <button type="button" class="tab" data-view="schedule">周计划</button>
+      <button type="button" class="tab" data-view="settings">设置</button>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- ======== 视图一：今日 ======== -->
+    <section id="view-today" class="view active">
+      <div class="today-head">
+        <span id="today-week" class="week-badge"></span>
+        <span id="today-date" class="today-date"></span>
+      </div>
+
+      <div class="concept">
+        <b>今晚：</b>3–5 分钟，1 诗 + 1 歌。慢点念、拖长韵、看 ta 的眼睛——重在每天在场，不在时长。
+      </div>
+
+      <!-- 诗 -->
+      <article class="piece poem-piece" id="piece-poem">
+        <div class="piece-kind">诗 · 先读 2 遍 <span class="hint">慢 · 拖韵 · 看眼睛</span></div>
+        <h2 class="piece-title" id="poem-title"></h2>
+        <div class="piece-author" id="poem-author"></div>
+        <div class="piece-text" id="poem-text"></div>
+        <details class="piece-tips" open>
+          <summary>怎么读</summary>
+          <p id="poem-tips"></p>
+        </details>
+      </article>
+
+      <!-- 歌/谣 -->
+      <article class="piece song-piece" id="piece-song">
+        <div class="piece-kind">儿歌/童谣 · 再哼 1–2 遍 <span class="hint">配轻拍或动作</span></div>
+        <h2 class="piece-title" id="song-title"></h2>
+        <div class="piece-text" id="song-text"></div>
+        <details class="piece-tips" open>
+          <summary>怎么念</summary>
+          <p id="song-tips"></p>
+        </details>
+      </article>
+
+      <!-- 晚安曲（可选） -->
+      <details class="lullaby-box" id="lullaby-box" open>
+        <summary>🌙 睡前加餐 · 晚安曲（可选）</summary>
+        <div class="lullaby-inner">
+          <h3 class="piece-title" id="lul-title"></h3>
+          <div class="piece-text" id="lul-text"></div>
+          <p class="piece-tips-static"><b>怎么唱：</b><span id="lul-tips"></span></p>
+        </div>
+      </details>
+
+      <!-- 今晚 5 步 -->
+      <details class="steps-box" open>
+        <summary>📋 今晚固定 5 步（约 3–5 分钟）</summary>
+        <ol id="night-steps"></ol>
+      </details>
+
+      <div class="today-actions">
+        <button type="button" id="btn-swap" class="btn">换一组（今晚用）</button>
+        <button type="button" id="btn-tomorrow" class="btn ghost">看看明天</button>
+      </div>
+    </section>
+
+    <!-- ======== 视图二：内容库 ======== -->
+    <section id="view-library" class="view">
+      <div class="concept">
+        <b>内容分四类：</b><b>诗</b>练听、<b>儿歌</b>配旋律、<b>童谣</b>配动作、<b>晚安曲</b>收尾。6 个月宝宝听不懂意思，但听得懂音调、节奏、押韵——这些是中文里韵律密度最高的文本，等于给 ta 做"语音体操"。标「进阶/后段」的，等 6 个月后段再用。
+      </div>
+      <div class="lib-tabs" id="lib-tabs">
+        <button type="button" class="lib-tab active" data-cat="poems">诗 <span id="count-poems"></span></button>
+        <button type="button" class="lib-tab" data-cat="songs">儿歌 <span id="count-songs"></span></button>
+        <button type="button" class="lib-tab" data-cat="nursery">童谣 <span id="count-nursery"></span></button>
+        <button type="button" class="lib-tab" data-cat="lullabies">晚安曲 <span id="count-lullabies"></span></button>
+      </div>
+      <p class="lib-legend">⭐ 已定曲目 · 标「进阶/后段」的暂时浏览就好，不参与自动换</p>
+      <ul class="lib-list" id="lib-list"></ul>
+      <p class="lib-footer">果果爸爸，果果妈妈，果果爷爷，果果奶奶<br>大家都爱果果 ❤️</p>
+    </section>
+
+    <!-- ======== 视图三：周计划 ======== -->
+    <section id="view-schedule" class="view">
+      <div class="concept">
+        <b>重复即安全感：</b>同一组合循环一整周，不天天换新——宝宝从"陌生"变"熟悉"，熟悉就是安全感。每天 1 诗 + 1 歌就够：注意力只有 3–5 分钟，<b>重在每天在场，不在时长</b>。
+      </div>
+      <h2 class="view-title">周计划</h2>
+      <p class="view-sub">前 8 周按手册排好，第 9 周起每周自动换不重样；每晚睡前可加一首晚安曲收尾（每周换一首）。今天是<span id="schedule-now-week" class="accent"></span>。</p>
+      <table class="sched-table" id="sched-table"></table>
+      <p class="sched-next" id="sched-next"></p>
+      <details class="info-box" open>
+        <summary>第 9 周起每周自动换</summary>
+        <ul class="info-list">
+          <li><b>诗</b>：从 14 首五言诗里，每周换一首。</li>
+          <li><b>儿歌/童谣</b>：从 40 条里，每周换一条。</li>
+          <li><b>晚安曲</b>：从 7 首里每周换一首，睡前可选加唱。</li>
+          <li>同一组合一整周不变；全部用过一遍后，再回到第一首重新开始。</li>
+        </ul>
+        <p class="info-note">标「进阶/后段」的暂时不参与自动换（内容库里有标签），等 6 个月后段或 8 个月后再用，想看随时进内容库。</p>
+      </details>
+      <details class="info-box" open>
+        <summary>每周日换下一组</summary>
+        <ul class="info-list">
+          <li>每周日，看一眼下周那一行，就知道下周念什么。</li>
+          <li>不用抄卡片——网站已经自动算好，到日子打开就是。</li>
+        </ul>
+      </details>
+    </section>
+
+    <!-- ======== 视图四：设置 ======== -->
+    <section id="view-settings" class="view">
+      <div class="concept">
+        <b>这里多数不用动：</b>网站已按手册自动排好，打开就是今天该念的。只有想改节奏（改起始周、撤销手动换组）时才碰这里。
+      </div>
+      <h2 class="set-title">使用指导</h2>
+      <ol class="guide-list">
+        <li><b>今日页＝打开即念</b>：打开就是今晚该念的（1 诗 + 1 歌），照着大字念就行；想换内容点"换一组"，想预习明天点"看看明天"。</li>
+        <li><b>全屏专注</b>：点诗或歌的正文，整屏只剩这首大字，抱着宝宝念更专注；点屏幕任意处退出。</li>
+        <li><b>屏幕常亮</b>：打开页面屏幕不会自动变暗，单手抱娃也不用担心念到一半黑屏。</li>
+        <li><b>内容库</b>：70 条内容按诗 / 儿歌 / 童谣 / 晚安曲分类，点开有全文和"怎么读"；进阶内容有标签，先浏览就好。</li>
+        <li><b>周计划页</b>：前 8 周按手册排好，第 9 周起每周自动换不重样；每晚还有一首晚安曲（可选）收尾，当前是第几周一目了然。</li>
+        <li><b>夜间模式与字号</b>：右上角 🌙 切换深色/浅色（晚上房间暗用深色护眼），A+ / A− 调字大小，老人看得清。</li>
+        <li><b>手机主屏幕</b>（部署后）：在浏览器里"添加到主屏幕"，以后点图标就能像用 App 一样打开。</li>
+      </ol>
+      <h2 class="set-title">设置</h2>
+      <div class="set-row">
+        <label for="set-weekstart">第 1 周从哪天开始（周计划起点）</label>
+        <input type="date" id="set-weekstart">
+        <p class="set-hint">默认 2026-08-07（建站日，正好在念静夜思 + 小星星）。改动后「今日」会按新的起始周重新算。</p>
+      </div>
+      <div class="set-row">
+        <label>今晚组合</label>
+        <div class="set-inline">
+          <button type="button" id="btn-reset-today" class="btn ghost">恢复自动（撤销手动换组）</button>
+        </div>
+      </div>
+      <div class="set-row">
+        <label>朗读技巧（每晚挑一个用）</label>
+        <ul class="tip-list" id="reading-tips"></ul>
+      </div>
+      <div class="set-row">
+        <label>关于</label>
+        <p class="set-hint">内容来自《亲子早教手册·宝宝 6 个月版》（诗 22 · 儿歌 21 · 童谣 20 · 晚安曲 7）。原则：<b>每天在场，不贪多；真人声音才是核心，音频是辅助。</b></p>
+      </div>
+      <div class="set-row">
+        <label>留言板 · 给果果的建议</label>
+        <p class="set-hint">念的时候有什么感受？宝宝对哪首反应最好、哪首太长读起来费劲？想让果果听点什么新内容？都写下来，你的建议会变成果果的下一批内容。</p>
+        <textarea id="suggest-input" rows="4" placeholder="例如：昨晚念《咏鹅》时果果笑得很开心……"></textarea>
+        <div class="set-inline">
+          <button type="button" id="btn-copy-suggest" class="btn">复制建议</button>
+          <button type="button" id="btn-save-suggest" class="btn ghost">存到本机</button>
+        </div>
+        <p class="set-hint" id="suggest-status">写好后点"复制"，发微信给果果爸爸就行。</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">固定时间比内容重要 · 只要你在身边，比读什么重要</footer>
+
+  <!-- 内容库详情弹层 -->
+  <div class="modal-mask" id="modal-mask" hidden>
+    <div class="modal">
+      <button type="button" class="modal-close" id="modal-close" aria-label="关闭">✕</button>
+      <div class="piece-kind" id="m-kind"></div>
+      <h2 class="piece-title" id="m-title"></h2>
+      <div class="piece-author" id="m-author"></div>
+      <div class="piece-text" id="m-text"></div>
+      <div class="piece-tips-static" id="m-tips"></div>
+    </div>
+  </div>
+
+  <!-- 全屏专注模式（点今日正文进入） -->
+  <div class="focus-mask" id="focus-mask" hidden>
+    <div class="focus-kind" id="focus-kind"></div>
+    <div class="focus-title" id="focus-title"></div>
+    <div class="focus-author" id="focus-author"></div>
+    <div class="focus-text" id="focus-text"></div>
+    <div class="focus-hint">点屏幕任意处退出</div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
