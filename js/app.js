@@ -279,12 +279,20 @@ function openFocus(kind, title, author, text) {
 }
 
 function closeFocus() {
-  $("focus-mask").hidden = true;
-  document.body.style.overflow = "";
   if (focusFullscreen) {
     focusFullscreen = false;
-    if (document.exitFullscreen) document.exitFullscreen();
-    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+    /* 先退出浏览器全屏，过渡期间遮罩保持可见（奶油色），避免退全屏瞬间露出黑色背景 */
+    var el = document;
+    if (el.exitFullscreen) el.exitFullscreen();
+    else if (el.webkitExitFullscreen) el.webkitExitFullscreen();
+    /* 兜底：若 fullscreenchange 未触发（如被拒绝/异常），延时后隐藏遮罩 */
+    setTimeout(function () {
+      $("focus-mask").hidden = true;
+      document.body.style.overflow = "";
+    }, 350);
+  } else {
+    $("focus-mask").hidden = true;
+    document.body.style.overflow = "";
   }
 }
 
