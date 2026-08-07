@@ -189,6 +189,20 @@ main {
   margin-bottom: 8px;
   filter: drop-shadow(0 2px 4px rgba(214,156,102,0.3));
 }
+
+.hello-age {
+  display: inline-block;
+  background: #fff;
+  color: var(--accent);
+  font-size: 0.95rem;
+  font-weight: bold;
+  letter-spacing: 0.06em;
+  padding: 4px 16px;
+  border-radius: 999px;
+  margin-bottom: 8px;
+  box-shadow: 0 2px 8px rgba(214,156,102,0.2);
+}
+
 .hello-title {
   font-size: 1.35rem;
   color: var(--accent);
