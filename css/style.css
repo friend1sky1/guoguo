@@ -1,23 +1,17 @@
+@import url("https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/lxgwwenkai-regular.css");
+
 /* ============================================================
  * 果果的早教小站 · 样式
  * 手机竖屏优先；深色模式默认跟随系统，可手动切换
  * 字号用 rem 体系：A+/A− 改变 html 根字号，整体缩放
  * ============================================================ */
 
-/* ---------- 网络字体（可爱圆体 + 楷体） ---------- */
+/* ---------- 网络字体（可爱圆体） ---------- */
 /* 界面字：站酷快乐体（可爱圆体），加载失败回退苹方/幼圆 */
 @font-face {
   font-family: "ZCOOL KuaiLe";
   src: url("https://cdn.jsdelivr.net/npm/@fontsource/zcool-kuaile/files/zcool-kuaile-5-400-normal.woff2") format("woff2"),
        url("https://cdn.jsdelivr.net/npm/@fontsource/zcool-kuaile/files/zcool-kuaile-5-400-normal.woff") format("woff");
-  font-display: swap;
-  font-weight: 400;
-}
-/* 念诵字：霞鹜文楷（优雅楷体），回退楷体 */
-@font-face {
-  font-family: "LXGW WenKai";
-  src: url("https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/lxgw-wenkai-regular/lxgw-wenkai-regular.woff2") format("woff2"),
-       url("https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/lxgw-wenkai-regular/lxgw-wenkai-regular.woff") format("woff");
   font-display: swap;
   font-weight: 400;
 }
