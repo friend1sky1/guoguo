@@ -63,7 +63,7 @@ html[data-theme="dark"] {
 /* ---------- 基础 ---------- */
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-html { font-size: var(--fs-base); }
+html { font-size: var(--fs-base); background: var(--bg); }
 
 body {
   margin: 0;
