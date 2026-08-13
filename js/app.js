@@ -543,7 +543,7 @@ function syncPlayBtn(btn, file) {
 /* ---------------- 主题与字号 ---------------- */
 
 function applyTheme() {
-  var t = LS.get("guoguo.theme", "auto");
+  var t = LS.get("guoguo.theme", "light");
   var html = document.documentElement;
   if (t === "dark") html.dataset.theme = "dark";
   else if (t === "light") html.dataset.theme = "light";
@@ -557,8 +557,8 @@ function applyTheme() {
 }
 
 function cycleTheme() {
-  var order = ["auto", "light", "dark"];
-  var cur = LS.get("guoguo.theme", "auto");
+  var order = ["light", "dark", "auto"];
+  var cur = LS.get("guoguo.theme", "light");
   var idx = 0, i;
   for (i = 0; i < order.length; i++) { if (order[i] === cur) { idx = i; break; } }
   var next = order[(idx + 1) % order.length];
