@@ -92,7 +92,7 @@ var CONTENT = {
 
   /* ---- B. 儿歌（21）---- */
   songs: [
-    { id: "song1",  title: "小星星",           stage: "basic", star: true,
+    { id: "song1", audio: "song1.mp3",  title: "小星星",           stage: "basic", star: true,
       text: "一闪一闪亮晶晶，满天都是小星星，挂在天上放光明，好像许多小眼睛。一闪一闪亮晶晶，满天都是小星星。",
       tips: "全世界最稳的入睡旋律；哼唱时每拍轻拍后背；唱到\"小眼睛\"时眨眨眼给宝宝看。" },
     { id: "song2",  title: "小兔子乖乖",       stage: "basic",

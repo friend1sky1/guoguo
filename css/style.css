@@ -280,6 +280,35 @@ main {
   font-weight: 400;
 }
 
+/* 标题行（标题 + 播放按钮） */
+.piece-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.play-btn {
+  flex: none;
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 50%;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow);
+}
+
+.play-btn:active { transform: scale(0.92); }
+.play-btn.playing { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
+/* 关键：display:flex 会覆盖 hidden 属性，必须显式恢复隐藏 */
+.play-btn[hidden] { display: none; }
+
 .piece-author {
   color: var(--fg-soft);
   font-size: 0.9rem;
@@ -703,6 +732,24 @@ html[data-theme="dark"] .badge.star { background: #8a6a12; color: #f5d98c; }
   font-size: 0.8rem;
   padding: 18px 12px 26px;
 }
+
+/* ---------- 轻提示 toast ---------- */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 8vh;
+  transform: translateX(-50%);
+  background: var(--fg);
+  color: var(--bg);
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  z-index: 200;
+  box-shadow: var(--shadow);
+  max-width: 80vw;
+  text-align: center;
+}
+.toast[hidden] { display: none; }
 
 /* ---------- 桌面端微调 ---------- */
 @media (min-width: 640px) {

@@ -51,6 +51,12 @@ var document = {
   body: { style: {} }
 };
 var navigator = {};
+var Audio = function () { this.paused = true; this.dataset = {}; };
+Audio.prototype.play = function () { this.paused = false; };
+Audio.prototype.pause = function () { this.paused = true; };
+Audio.prototype.addEventListener = function () {};
+var setTimeout = function (fn, ms) { fn(); return 0; };
+var clearTimeout = function () {};
 var window = { scrollTo: function () {}, onload: null };
 '@
 
@@ -99,6 +105,35 @@ $assert = @'
     copySuggest();
     return __ls["guoguo.suggest"] === "昨晚念咏鹅果果笑了" ? "ok" : "no";
   })());
+  /* 月龄非负（birth 2026-01-21；unborn 分支或负数视为异常） */
+  R.push("age=" + (function () {
+    var a = getAgeInfo();
+    return (a.unborn || a.totalMonths >= 0) ? "ok" : "neg";
+  })());
+  /* 音频字段与播放逻辑（静态声明：只有 song1 已放音频） */
+  R.push("audio=" + (function () {
+    var ok1 = CONTENT.songs[0].audio === "song1.mp3";
+    var ok2 = CONTENT.lullabies[6].audio === undefined;
+    var ok3 = CONTENT.poems[0].audio === undefined;
+    var cnt = 0, i;
+    for (i = 0; i < CONTENT.songs.length; i++) { if (CONTENT.songs[i].audio) cnt++; }
+    var ok4 = cnt === 1;
+    togglePlay($("play-song"), "song1.mp3");
+    var playing = currentAudio && !currentAudio.paused;
+    togglePlay($("play-song"), "song1.mp3");
+    var paused = currentAudio && currentAudio.paused;
+    togglePlay($("play-song"), "");
+    return (ok1 && ok2 && ok3 && ok4 && playing && paused) ? "ok" : "no";
+  })());
+  /* 按钮显隐：有 audio 显示、无 audio 隐藏（静态驱动） */
+  R.push("hide=" + (function () {
+    var btn = __els["play-song"];
+    syncPlayBtn(btn, "song1.mp3");
+    var h1 = btn.hidden;
+    syncPlayBtn(btn, undefined);
+    var h2 = btn.hidden;
+    return (h1 === false && h2 === true) ? "y" : "n";
+  })());
   renderSchedule();
   var schedHtml = __els["sched-table"] ? __els["sched-table"].innerHTML : "";
   R.push("sched-lul=" + (schedHtml.indexOf("晚安曲") >= 0 ? "y" : "n"));
@@ -131,6 +166,9 @@ $expect = @(
   "1:静夜思+小星星:fixed",
   "focus=ok",
   "suggest=ok",
+  "age=ok",
+  "audio=ok",
+  "hide=y",
   "sched-lul=y",
   "sched-lul1=y",
   "2:静夜思+小星星:fixed"

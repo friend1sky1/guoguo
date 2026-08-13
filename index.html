@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#1f2933">
+  <meta name="theme-color" content="#1f2733">
   <title>果果的早教小站</title>
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="icon-192.png">
@@ -53,7 +53,10 @@
       <article class="piece poem-piece" id="piece-poem">
         <div class="piece-kind-tag">📖 小诗 · 先读 2 遍</div>
         <div class="piece-kind"><span class="hint">慢 · 拖韵 · 看眼睛</span></div>
-        <h2 class="piece-title" id="poem-title"></h2>
+        <div class="piece-head">
+          <h2 class="piece-title" id="poem-title"></h2>
+          <button type="button" class="play-btn" id="play-poem" hidden>▶</button>
+        </div>
         <div class="piece-author" id="poem-author"></div>
         <div class="piece-text" id="poem-text"></div>
         <details class="piece-tips" open>
@@ -66,7 +69,10 @@
       <article class="piece song-piece" id="piece-song">
         <div class="piece-kind-tag">🎵 儿歌童谣 · 再哼 1–2 遍</div>
         <div class="piece-kind"><span class="hint">配轻拍或动作</span></div>
-        <h2 class="piece-title" id="song-title"></h2>
+        <div class="piece-head">
+          <h2 class="piece-title" id="song-title"></h2>
+          <button type="button" class="play-btn" id="play-song" hidden>▶</button>
+        </div>
         <div class="piece-text" id="song-text"></div>
         <details class="piece-tips" open>
           <summary>怎么念</summary>
@@ -78,7 +84,10 @@
       <details class="lullaby-box" id="lullaby-box" open>
         <summary>🌙 睡前加餐 · 晚安曲（可选）</summary>
         <div class="lullaby-inner">
-          <h3 class="piece-title" id="lul-title"></h3>
+          <div class="piece-head">
+            <h3 class="piece-title" id="lul-title"></h3>
+            <button type="button" class="play-btn" id="play-lul" hidden>▶</button>
+          </div>
           <div class="piece-text" id="lul-text"></div>
           <p class="piece-tips-static"><b>怎么唱：</b><span id="lul-tips"></span></p>
         </div>
@@ -195,21 +204,26 @@
     <div class="modal">
       <button type="button" class="modal-close" id="modal-close" aria-label="关闭">✕</button>
       <div class="piece-kind" id="m-kind"></div>
-      <h2 class="piece-title" id="m-title"></h2>
+      <div class="piece-head">
+        <h2 class="piece-title" id="m-title"></h2>
+        <button type="button" class="play-btn" id="m-play" hidden>▶</button>
+      </div>
       <div class="piece-author" id="m-author"></div>
       <div class="piece-text" id="m-text"></div>
       <div class="piece-tips-static" id="m-tips"></div>
     </div>
   </div>
 
-  <!-- 全屏专注模式（点今日正文进入） -->
-  <div class="focus-mask" id="focus-mask" hidden>
+  <!-- 全屏专注模式（点今日正文进入） -->  <div class="focus-mask" id="focus-mask" hidden>
     <div class="focus-kind" id="focus-kind"></div>
     <div class="focus-title" id="focus-title"></div>
     <div class="focus-author" id="focus-author"></div>
     <div class="focus-text" id="focus-text"></div>
     <div class="focus-hint">点屏幕任意处退出</div>
   </div>
+
+  <!-- 轻提示 -->
+  <div class="toast" id="toast" hidden></div>
 
   <script src="js/data.js"></script>
   <script src="js/app.js"></script>

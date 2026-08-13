@@ -55,6 +55,10 @@ function addDays(str, n) {
 function getAgeInfo() {
   var today = new Date();
   var b = parseDate(BABY.birth);
+  /* 防御：生日未到或日期非法时，不显示负数月龄 */
+  if (isNaN(b.getTime()) || today < b) {
+    return { years: 0, months: 0, days: 0, totalMonths: 0, unborn: true };
+  }
   var ty = today.getFullYear(), tm = today.getMonth(), td = today.getDate();
   var by = b.getFullYear(), bm = b.getMonth(), bd = b.getDate();
   var totalMonths = (ty - by) * 12 + (tm - bm);
@@ -64,12 +68,13 @@ function getAgeInfo() {
     var prevMonthDays = new Date(ty, tm, 0).getDate();
     days = days + prevMonthDays;
   }
-  return { years: Math.floor(totalMonths / 12), months: totalMonths % 12, days: days, totalMonths: totalMonths };
+  return { years: Math.floor(totalMonths / 12), months: totalMonths % 12, days: days, totalMonths: totalMonths, unborn: false };
 }
 
 /* 月龄的中文描述 */
 function formatAge() {
   var a = getAgeInfo();
+  if (a.unborn) return BABY.name + " 还没有出生呢";
   if (a.years >= 1) {
     var p = a.years + " 岁";
     if (a.months > 0) p += " " + a.months + " 个月";
@@ -195,7 +200,7 @@ function formatLines(text) {
   var lines = text.replace(/([，。！？；、])/g, "$1\n").split("\n");
   var out = [];
   for (var i = 0; i < lines.length; i++) {
-    var s = lines[i].trim();
+    var s = lines[i].replace(/^\s+|\s+$/g, "");
     if (s) out.push(s);
   }
   return out.join("<br>");
@@ -232,6 +237,10 @@ function renderToday() {
 
   var swapBtn = $("btn-swap");
   swapBtn.textContent = plan.source === "override" ? "再换一组（今晚用）" : "换一组（今晚用）";
+
+  syncPlayBtn($("play-poem"), plan.poem.audio);
+  syncPlayBtn($("play-song"), plan.song.audio);
+  syncPlayBtn($("play-lul"), plan.lullaby.audio);
 
   $("btn-tomorrow").textContent = isTomorrow ? "回到今天" : "看看明天";
 }
@@ -275,6 +284,14 @@ function openModal(item, kindLabel) {
   $("m-author").textContent = item.author || "";
   $("m-text").innerHTML = formatLines(item.text);
   $("m-tips").textContent = "怎么读：" + item.tips;
+  var mPlay = $("m-play");
+  if (item.audio) {
+    mPlay.hidden = false;
+    mPlay.dataset.audio = item.audio;
+    syncPlayBtn(mPlay, item.audio);
+  } else {
+    mPlay.hidden = true;
+  }
   $("modal-mask").hidden = false;
   document.body.style.overflow = "hidden";
 }
@@ -452,6 +469,77 @@ function copySuggest() {
   }
 }
 
+/* ---------------- 音频播放 ---------------- */
+
+var currentAudio = null;
+var currentBtn = null;
+var toastTimer = null;
+
+function audioPath(file) { return "audio/" + file; }
+
+function updatePlayBtn(btn, playing) {
+  if (!btn) return;
+  btn.textContent = playing ? "⏸" : "▶";
+  if (btn.classList) {
+    if (playing) btn.classList.add("playing");
+    else btn.classList.remove("playing");
+  }
+}
+
+function showToast(msg) {
+  var t = $("toast");
+  t.textContent = msg;
+  t.hidden = false;
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(function () { t.hidden = true; }, 3000);
+}
+
+function stopAudio() {
+  if (currentAudio) {
+    try { currentAudio.pause(); } catch (e) { }
+    currentAudio = null;
+  }
+  if (currentBtn) {
+    updatePlayBtn(currentBtn, false);
+    currentBtn = null;
+  }
+}
+
+function togglePlay(btn, file) {
+  if (!file) { showToast("这条还没有音频，等果果爸爸做好之后"); return; }
+  if (currentAudio && currentAudio.dataset && currentAudio.dataset.file === file) {
+    /* 同一首：暂停/继续 */
+    if (currentAudio.paused) {
+      try { currentAudio.play(); } catch (e) { }
+    } else {
+      try { currentAudio.pause(); } catch (e) { }
+    }
+    updatePlayBtn(btn, !currentAudio.paused);
+    return;
+  }
+  stopAudio();
+  if (typeof Audio === "undefined") { showToast("这个浏览器不支持播放"); return; }
+  var a = new Audio(audioPath(file));
+  if (!a.dataset) a.dataset = {};
+  a.dataset.file = file;
+  currentAudio = a;
+  currentBtn = btn;
+  updatePlayBtn(btn, true);
+  try { a.play(); } catch (e) { }
+  a.addEventListener("ended", function () { stopAudio(); });
+  a.addEventListener("error", function () { stopAudio(); showToast("音频还没放进来：" + audioPath(file)); });
+}
+
+/* 按钮显示逻辑：只有声明了音频的条目才显示（静态驱动，无运行时探测） */
+function syncPlayBtn(btn, file) {
+  if (!btn) return;
+  if (!file) { btn.hidden = true; return; }
+  btn.hidden = false;
+  var playing = currentAudio && currentAudio.dataset &&
+                currentAudio.dataset.file === file && !currentAudio.paused;
+  updatePlayBtn(btn, playing);
+}
+
 /* ---------------- 主题与字号 ---------------- */
 
 function applyTheme() {
@@ -465,7 +553,7 @@ function applyTheme() {
   var isDark = t === "dark";
   if (t === "auto" && window.matchMedia) isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
   var meta = document.querySelector('meta[name="theme-color"]');
-  if (meta) meta.content = isDark ? "#1f2933" : "#f7f3ea";
+  if (meta) meta.content = isDark ? "#1f2733" : "#fdf6ec";
 }
 
 function cycleTheme() {
@@ -581,6 +669,22 @@ function bind() {
 
   $("btn-copy-suggest").addEventListener("click", copySuggest);
   $("btn-save-suggest").addEventListener("click", saveSuggest);
+
+  $("play-poem").addEventListener("click", function () {
+    var plan = getPlan(preview === "tomorrow" ? addDays(todayStr(), 1) : todayStr());
+    togglePlay(this, plan.poem.audio);
+  });
+  $("play-song").addEventListener("click", function () {
+    var plan = getPlan(preview === "tomorrow" ? addDays(todayStr(), 1) : todayStr());
+    togglePlay(this, plan.song.audio);
+  });
+  $("play-lul").addEventListener("click", function () {
+    var plan = getPlan(preview === "tomorrow" ? addDays(todayStr(), 1) : todayStr());
+    togglePlay(this, plan.lullaby.audio);
+  });
+  $("m-play").addEventListener("click", function () {
+    togglePlay(this, this.dataset.audio);
+  });
 
   bindFocus();
   bindWakeLock();
